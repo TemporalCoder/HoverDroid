@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<html>
+  <head>
+  </head>
+  <body onload = setupGame()>
+    <H1> R2 Hover 2</h1>
+    <canvas id="GCanvas" width="512" height="700">No HTML5 Support</canvas>
+    <script>
+        //Game canvas
+        var canvas = document.getElementById('GCanvas');
+        var GC = canvas.getContext('2d'); //GC = Game Canvas (what we draw on
+        
+		//Keyboard Input Listener
+		var keyState = {};    
+		window.addEventListener('keydown',function(e){keyState[e.keyCode || e.which] = true;},true);    
+		window.addEventListener('keyup',function(e){keyState[e.keyCode || e.which] = false;},true);	
+		
+		
+        //Global Variables
+        var sx = 512;
+		var sy = 512;
+		
+		//Create and load image (png)
+		image1 = new Image();
+		image1.src = "R2Flying.png";
+		
+		
+		var R2x = sx/2-64;
+		var R2y = sy/2;
+		
+		var R2yv = 0;
+		
+		var columns = [				//x, height, gap
+			[512, 150, 150],
+			[624, 100, 200],
+			[736, 100, 250],
+			[848, 200, 150],
+		];
+		
+        //game functions    
+        function setupGame()
+        {   
+            timerID = setInterval("mainGame()", 30); //run the mainGame
+        }
+
+        function gameLoop()
+		{
+			
+		}
+        function intro(){}
+        function outro(){}
+        function mainGame(){
+			
+			//Get player Input
+			if(keyState[38]) //up key
+			{
+				R2yv= -10;
+			}
+			
+			R2y+=R2yv;
+			R2yv+=2;
+			
+			if(R2y>sy-128){R2y=sy-128; R2yv=0;}
+			
+			for(i=0;i<columns.length;i++)
+			{
+				columns[i][0]-=2;
+				if(columns[i][0]<0){columns[i][0] = 512};
+				var rnd = Math.floor(Math.random() * 15)*10;
+				columns[i][1] + rnd;
+				rnd = Math.floor(Math.random() * 15)*10;
+				columns[i][2] + rnd;
+				
+			}
+			
+			//draw Game
+			//clear screen and draw background/outline
+			GC.clearRect(0,0,sx,sy);
+			GC.fillStyle="#000000"; 	//Black
+			GC.strokeStyle="#DDDDDD";	//Light grey
+			GC.fillRect(0,0,sx,sy);
+			GC.strokeRect(2,2, sx-4, sy-4); //2 pixel border
+			
+		
+			GC.drawImage( image1, R2x, R2y, 64, 64);//, PacmanX, PacmanY, mapsize, mapsize ); //image, source, destination (crop and scale)
+			
+			GC.fillStyle="#BBBBFF"; 	//Black
+			GC.strokeStyle="#FFDDDD";	//Light grey
+			
+			
+			for(i=0;i<columns.length;i++)
+			{			
+				//Upper Column
+				GC.fillRect(columns[i][0],0,20,columns[i][1]);
+				
+				//Lower Column			
+				GC.fillRect(columns[i][0],columns[i][1]+columns[i][2],20,sy-(columns[i][1]+columns[i][2]));
+				GC.strokeRect(columns[i][0],columns[i][1]+columns[i][2],20,sy-(columns[i][1]+columns[i][2])); //2 pixel border
+			}
+		
+		}
+
+    </script>
+  </body>
+</html>
